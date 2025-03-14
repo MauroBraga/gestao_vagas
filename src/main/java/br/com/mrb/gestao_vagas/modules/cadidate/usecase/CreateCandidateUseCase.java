@@ -1,8 +1,8 @@
 package br.com.mrb.gestao_vagas.modules.cadidate.usecase;
 
 import br.com.mrb.gestao_vagas.exceptions.UserFoundException;
-import br.com.mrb.gestao_vagas.modules.cadidate.CandidateEntity;
-import br.com.mrb.gestao_vagas.modules.cadidate.CandidateRepository;
+import br.com.mrb.gestao_vagas.modules.cadidate.entities.CandidateEntity;
+import br.com.mrb.gestao_vagas.modules.cadidate.repository.CandidateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

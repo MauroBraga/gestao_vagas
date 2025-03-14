@@ -1,5 +1,6 @@
-package br.com.mrb.gestao_vagas.modules.cadidate;
+package br.com.mrb.gestao_vagas.modules.cadidate.repository;
 
+import br.com.mrb.gestao_vagas.modules.cadidate.entities.CandidateEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
