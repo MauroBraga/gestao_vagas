@@ -4,4 +4,7 @@ public class UserFoundException extends RuntimeException {
     public UserFoundException() {
         super("Usuário já existente");
     }
+    public UserFoundException(String message) {
+        super(message);
+    }
 }
