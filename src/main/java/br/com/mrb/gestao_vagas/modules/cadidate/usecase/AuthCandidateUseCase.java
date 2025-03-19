@@ -38,17 +38,17 @@ public class AuthCandidateUseCase {
         if(passwordEncoder.matches(authCandidateRequestDTO.password(), candidate.getPassword())){
             throw new AuthenticationException("Password not match");
         }
-
+        var experis_in = Instant.now().plus(Duration.ofMinutes(10));
         //Gerar Token
         Algorithm algorithm = Algorithm.HMAC256(secret);
         var token = JWT.create()
                 .withIssuer("javagas")
-                .withExpiresAt(Instant.now().plus(Duration.ofMinutes(10)))
+                .withExpiresAt(experis_in)
                 .withClaim("role", Arrays.asList("cadidate"))
                 .withSubject(candidate.getId().toString())
                 .sign(algorithm);
 
-        return AuthCandidateResponseDTO.builder().accessToken(token).build();
+        return AuthCandidateResponseDTO.builder().accessToken(token).expires_in(experis_in.toEpochMilli()).build();
 
     }
 }
