@@ -23,6 +23,7 @@ public class CompanyController {
             var candidate = this.createCompanyUseCase.execute(company);
             return ResponseEntity.ok(candidate);
         }catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
