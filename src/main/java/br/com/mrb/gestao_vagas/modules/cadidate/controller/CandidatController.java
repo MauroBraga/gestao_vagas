@@ -8,12 +8,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/candidates")
+@RequestMapping("/candidate")
 public class CandidatController {
 
     @Autowired
@@ -21,6 +22,7 @@ public class CandidatController {
 
     @Autowired
     private ProfileCandidateUseCase profileCandidateUseCase;
+
 
     @PostMapping
     public ResponseEntity<Object> create(@Valid  @RequestBody CandidateEntity candidateEntity) {
@@ -33,9 +35,10 @@ public class CandidatController {
 
     }
 
-    @GetMapping("/")
+    @GetMapping
+    @PreAuthorize("hasRole('CANDIDATE')")
     public ResponseEntity<Object> getId(HttpServletRequest request) {
-        var idCandidate = request.getSession().getAttribute("candidate_id");
+        var idCandidate = request.getAttribute("candidate_id");
         try {
             var profile = this.profileCandidateUseCase.execute(UUID.fromString(idCandidate.toString()));
             return ResponseEntity.ok(profile);

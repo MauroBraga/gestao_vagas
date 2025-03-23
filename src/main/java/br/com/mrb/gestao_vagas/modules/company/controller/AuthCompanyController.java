@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.naming.AuthenticationException;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/company")
 public class AuthCompanyController {
 
     @Autowired
     private AuthCompanyUseCase authCompanyUseCase;
 
-    @PostMapping(value = "/company")
+    @PostMapping(value = "/auth")
     public ResponseEntity create(@RequestBody AuthCompanyDTO authCompanyDTO){
 
         try {

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 @Component
-public class SecurityFilter extends OncePerRequestFilter {
+public class SecurityCompanyFilter extends OncePerRequestFilter {
 
     @Autowired
     private JWTProvider jwtProvider;
@@ -23,16 +23,20 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-        SecurityContextHolder.getContext().setAuthentication(null);
-        if(authHeader != null) {
-            var subjecyToken = this.jwtProvider.validarToken(authHeader);
-            if(subjecyToken.isEmpty()) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+
+
+        if(request.getRequestURI().startsWith("/company")) {
+         //   SecurityContextHolder.getContext().setAuthentication(null);
+            if(authHeader != null) {
+                var token = this.jwtProvider.validarToken(authHeader);
+                if (token == null) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+                request.setAttribute("company_id",token);
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token, null, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
-            request.setAttribute("company_id",subjecyToken);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjecyToken, null, Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
         filterChain.doFilter(request, response);
