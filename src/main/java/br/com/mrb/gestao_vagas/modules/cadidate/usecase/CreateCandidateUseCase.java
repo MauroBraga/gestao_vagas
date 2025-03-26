@@ -25,6 +25,8 @@ public class CreateCandidateUseCase {
                 });
         var password = passwordEncoder.encode(candidateResquestDTO.getPassword());
         var candidate = new CandidateEntity();
+        candidate.setName(candidateResquestDTO.getName());
+        candidate.setDescription(candidateResquestDTO.getDescription());
         candidate.setUsername(candidateResquestDTO.getUsername());
         candidate.setEmail(candidateResquestDTO.getEmail());
         candidate.setPassword(password);
