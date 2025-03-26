@@ -1,5 +1,6 @@
 package br.com.mrb.gestao_vagas.modules.cadidate.controller;
 
+import br.com.mrb.gestao_vagas.modules.cadidate.dto.ProfileCandidateResponseDTO;
 import br.com.mrb.gestao_vagas.modules.cadidate.entities.CandidateEntity;
 import br.com.mrb.gestao_vagas.modules.cadidate.usecase.CreateCandidateUseCase;
 import br.com.mrb.gestao_vagas.modules.cadidate.usecase.ListAllJobsFilterUseCase;
@@ -24,7 +25,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/candidate")
-public class CandidatController {
+public class CandidateController {
 
     @Autowired
     private CreateCandidateUseCase createCandidateUseCase;
@@ -48,6 +49,15 @@ public class CandidatController {
 
     @GetMapping
     @PreAuthorize("hasRole('CANDIDATE')")
+    @Tag(name = "Candidato", description = "informações do candidato")
+    @Operation(summary = "Perfil do candidato",description = "Essa função é responsável por buscar as informações do perfil do candidato")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(array = @ArraySchema(schema =@Schema(implementation = ProfileCandidateResponseDTO.class) ), mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "400", description = "UserNotFound")
+    })
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> getId(HttpServletRequest request) {
         var idCandidate = request.getAttribute("candidate_id");
         try {
