@@ -1,8 +1,8 @@
 package br.com.mrb.gestao_vagas.modules.cadidate.controller;
 
-import br.com.mrb.gestao_vagas.modules.cadidate.dto.ProfileCandidateResponseDTO;
 import br.com.mrb.gestao_vagas.modules.cadidate.entities.CandidateEntity;
 import br.com.mrb.gestao_vagas.modules.cadidate.usecase.CreateCandidateUseCase;
+import br.com.mrb.gestao_vagas.modules.cadidate.usecase.ListAllJobsFilterUseCase;
 import br.com.mrb.gestao_vagas.modules.cadidate.usecase.ProfileCandidateUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -23,6 +23,8 @@ public class CandidatController {
     @Autowired
     private ProfileCandidateUseCase profileCandidateUseCase;
 
+    @Autowired
+    private ListAllJobsFilterUseCase listAllJobsFilterUseCase;
 
     @PostMapping
     public ResponseEntity<Object> create(@Valid  @RequestBody CandidateEntity candidateEntity) {
@@ -43,6 +45,17 @@ public class CandidatController {
             var profile = this.profileCandidateUseCase.execute(UUID.fromString(idCandidate.toString()));
             return ResponseEntity.ok(profile);
         }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+    @GetMapping("/job")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<Object> findJobByFilter(@RequestParam String filter) {
+        try {
+            return ResponseEntity.ok(this.listAllJobsFilterUseCase.execute(filter));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
