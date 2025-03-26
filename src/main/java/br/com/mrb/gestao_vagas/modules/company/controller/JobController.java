@@ -3,6 +3,14 @@ package br.com.mrb.gestao_vagas.modules.company.controller;
 import br.com.mrb.gestao_vagas.modules.company.dto.CreateJobDTO;
 import br.com.mrb.gestao_vagas.modules.company.entities.JobEntity;
 import br.com.mrb.gestao_vagas.modules.company.usecase.CreateJobUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -25,6 +33,14 @@ public class JobController {
 
     @PostMapping
     @PreAuthorize("hasRole('COMPANY')")
+    @Tag(name = "Vagas", description = "informações das vagas")
+    @Operation(summary = "Cadastro de Vaga",description = "Essa função é responsável por cadastrar as vagas dentro da empresa")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = JobEntity.class) , mediaType = "application/json")
+            })
+    })
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> create(@Valid  @RequestBody CreateJobDTO dto, HttpServletRequest request) {
         try {
             var company_id=request.getAttribute("company_id");
