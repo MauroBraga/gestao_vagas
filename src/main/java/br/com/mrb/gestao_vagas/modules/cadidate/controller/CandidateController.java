@@ -4,6 +4,7 @@ import br.com.mrb.gestao_vagas.modules.cadidate.dto.CandidateResponseDTO;
 import br.com.mrb.gestao_vagas.modules.cadidate.dto.CandidateResquestDTO;
 import br.com.mrb.gestao_vagas.modules.cadidate.dto.ProfileCandidateResponseDTO;
 import br.com.mrb.gestao_vagas.modules.cadidate.entities.CandidateEntity;
+import br.com.mrb.gestao_vagas.modules.cadidate.usecase.ApplyJobCandidateUseCase;
 import br.com.mrb.gestao_vagas.modules.cadidate.usecase.CreateCandidateUseCase;
 import br.com.mrb.gestao_vagas.modules.cadidate.usecase.ListAllJobsFilterUseCase;
 import br.com.mrb.gestao_vagas.modules.cadidate.usecase.ProfileCandidateUseCase;
@@ -38,6 +39,9 @@ public class CandidateController {
 
     @Autowired
     private ListAllJobsFilterUseCase listAllJobsFilterUseCase;
+
+    @Autowired
+    private ApplyJobCandidateUseCase applyJobCandidateUseCase;
 
     @PostMapping
     @Operation(summary = "Cadastro do candidato",description = "Essa função é responsável por cadastrar um candidato.")
@@ -95,5 +99,20 @@ public class CandidateController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
+    }
+
+
+    @PostMapping("/job/apply")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @Operation(summary = "Inscrição do candidato para uma vaga", description = "Essa função é responsável por realizar a inscrição do candidato em uma vaga.")
+    @SecurityRequirement(name = "jwt_auth")
+    public ResponseEntity<Object> applyJob(HttpServletRequest request, @RequestBody String idJob) {
+        var idCandidate = request.getAttribute("candidate_id");
+        try {
+            var applyJob =  this.applyJobCandidateUseCase.execute(UUID.fromString(idCandidate.toString()),UUID.fromString(idJob));
+            return ResponseEntity.ok(applyJob);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
