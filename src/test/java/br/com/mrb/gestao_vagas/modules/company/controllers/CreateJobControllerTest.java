@@ -63,4 +63,19 @@ public class CreateJobControllerTest {
         ).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    public void should_not_be_able_to_create_job_if_company_not_fout() throws Exception {
+
+        var createdJob =CreateJobDTO.builder()
+                .level("LEVEL_TEST")
+                .benefits("BENEFITS_TEST")
+                .description("DESCRIPTION_TEST").build();
+
+        mvc.perform(MockMvcRequestBuilders.post("/job")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtils.objectToJson(createdJob))
+                .header("Authorization", TestUtils.generateTokenCompany(UUID.randomUUID()))
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
 }

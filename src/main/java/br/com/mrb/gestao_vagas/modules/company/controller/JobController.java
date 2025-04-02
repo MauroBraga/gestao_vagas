@@ -52,7 +52,6 @@ public class JobController {
             var retorno = this.createJobUseCase.execute(entity);
             return ResponseEntity.ok(retorno);
         }catch (Exception e){
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
