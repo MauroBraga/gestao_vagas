@@ -1,4 +1,5 @@
-version: '3.8'
+# Use postgres/example user/password credentials
+version: '3.9'
 
 networks:
   gv-network:

@@ -11,6 +11,7 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
+
         return new OpenAPI()
                 .info(new Info().title("Gestão de Vagas").description("API responsável pela gestão de vagas").version("1"))
                 .schemaRequirement("jwt_auth", creaSecurityScheme());
