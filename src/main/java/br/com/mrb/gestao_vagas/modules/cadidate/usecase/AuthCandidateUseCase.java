@@ -39,16 +39,17 @@ public class AuthCandidateUseCase {
             throw new AuthenticationException("Password not match");
         }
         var experis_in = Instant.now().plus(Duration.ofMinutes(10));
+        var roles = Arrays.asList("CANDIDATE");
         //Gerar Token
         Algorithm algorithm = Algorithm.HMAC256(secret);
         var token = JWT.create()
                 .withIssuer("javagas")
                 .withExpiresAt(experis_in)
-                .withClaim("roles", Arrays.asList("CANDIDATE"))
+                .withClaim("roles",roles)
                 .withSubject(candidate.getId().toString())
                 .sign(algorithm);
 
-        return AuthCandidateResponseDTO.builder().accessToken(token).expires_in(experis_in.toEpochMilli()).build();
+        return AuthCandidateResponseDTO.builder().accessToken(token).roles(roles).expires_in(experis_in.toEpochMilli()).build();
 
     }
 }

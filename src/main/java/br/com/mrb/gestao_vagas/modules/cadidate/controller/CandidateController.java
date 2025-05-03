@@ -106,10 +106,10 @@ public class CandidateController {
     @PreAuthorize("hasRole('CANDIDATE')")
     @Operation(summary = "Inscrição do candidato para uma vaga", description = "Essa função é responsável por realizar a inscrição do candidato em uma vaga.")
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<Object> applyJob(HttpServletRequest request, @RequestBody String idJob) {
+    public ResponseEntity<Object> applyJob(HttpServletRequest request, @RequestBody UUID idJob) {
         var idCandidate = request.getAttribute("candidate_id");
         try {
-            var applyJob =  this.applyJobCandidateUseCase.execute(UUID.fromString(idCandidate.toString()),UUID.fromString(idJob));
+            var applyJob =  this.applyJobCandidateUseCase.execute(UUID.fromString(idCandidate.toString()),idJob);
             return ResponseEntity.ok(applyJob);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

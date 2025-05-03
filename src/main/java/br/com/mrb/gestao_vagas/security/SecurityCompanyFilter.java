@@ -23,13 +23,12 @@ public class SecurityCompanyFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
+        String header = request.getHeader("Authorization");
 
 
-        if(request.getRequestURI().startsWith("/company")
-        || request.getRequestURI().startsWith("/job")) {
-            if(authHeader != null) {
-                var token = this.jwtProvider.validarToken(authHeader);
+        if (request.getRequestURI().startsWith("/job")) {
+            if (header != null) {
+                var token = this.jwtProvider.validarToken(header);
                 if (token == null) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
@@ -37,11 +36,14 @@ public class SecurityCompanyFilter extends OncePerRequestFilter {
 
                 var roles = token.getClaim("roles").asList(Object.class);
 
-                var grants = roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_"+role)).toList();
+                var grants = roles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
+                        .toList();
 
-                request.setAttribute("company_id",token.getSubject());
+                request.setAttribute("company_id", token.getSubject());
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token.getSubject(), null,
+                        grants);
 
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token.getSubject(), null, grants);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
