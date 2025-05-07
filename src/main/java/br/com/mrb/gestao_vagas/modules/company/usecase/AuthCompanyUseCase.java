@@ -40,12 +40,15 @@ public class AuthCompanyUseCase {
         var expireIn = Instant.now().plus(Duration.ofHours(2));
         //Gerar Token
         Algorithm algorithm = Algorithm.HMAC256(secret);
+
         var token = JWT.create().withIssuer("javagas")
                 .withExpiresAt(expireIn)
                 .withSubject(company.getId().toString())
                 .withClaim("roles", Arrays.asList("COMPANY"))
                 .sign(algorithm);
 
-        return AuthCompanyResponseDTO.builder().accessToken(token).expires_in(expireIn.toEpochMilli()).build();
+        var roles = Arrays.asList("COMPANY");
+
+        return AuthCompanyResponseDTO.builder().accessToken(token).roles(roles).expires_in(expireIn.toEpochMilli()).build();
     }
 }
